@@ -1,0 +1,4 @@
+comment = 'Prevent unindexed foreign keys'
+default_version = '1.0'
+module_pathname = '$libdir/fkhunter'
+relocatable = false
