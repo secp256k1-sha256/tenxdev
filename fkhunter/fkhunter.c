@@ -92,8 +92,8 @@ static bool column_has_index(char *tabname, char *colname)
         "   SELECT 1 "
         "   FROM pg_class t "
         "   JOIN pg_index ix ON t.oid = ix.indrelid "
-        "   JOIN pg_attribute a ON a.attrelid = t.oid AND a.attnum = ANY(ix.indkey) "
-        "   WHERE t.relkind = 'r' AND t.relname = $1 AND a.attname = $2"
+        "   JOIN pg_attribute a ON a.attrelid = t.oid AND a.attnum = ix.indkey[0] "
+        "   WHERE t.relkind = 'r' AND t.relname = $1 AND a.attname = $2 AND ix.indpred IS NULL AND ix.indexprs IS NULL "
         ")";
     
     Oid argtypes[2] = {TEXTOID, TEXTOID};  // Moved declarations here
