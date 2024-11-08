@@ -1,7 +1,7 @@
 EXTENSION = fkhunter
 MODULE_big = fkhunter
 PGFILEDESC = "Prevent unindexed foreign keys"
-DATA = fkhunter--1.0.sql
+DATA = fkhunter_1_0.sql
 
 OBJS = fkhunter.o
 
