@@ -1,4 +1,6 @@
-comment = 'Prevent unindexed foreign keys'
+# fkhunter extension
+
+comment = 'Prevent unindexed foreign key creation'
 default_version = '1.0'
-module_pathname = '$libdir/fkhunter'
 relocatable = false
+module_pathname = '$libdir/fkhunter'
