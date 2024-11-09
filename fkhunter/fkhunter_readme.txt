@@ -10,7 +10,10 @@ cd fkhunter
 make
 sudo make install
 
-#Load and Test the Extension
-#Start PostgreSQL service and load your new extension.
-sudo systemctl start postgresql
+#Add to shared_preload_libraries 
+alter system set shared_preload_libraries=fkhunter;
+
+#Restart PostgreSQL service and create your new extension.
+sudo systemctl restart postgresql.service
+
 sudo -u postgres psql -c "CREATE EXTENSION fkhunter;"
