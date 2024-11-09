@@ -8,7 +8,7 @@
 #include "catalog/namespace.h"
 #include "catalog/pg_class.h"
 #include "executor/spi.h"
-#include "utils/builtins.h"  // Include this for CStringGetTextDatum
+#include "utils/builtins.h"  
 
 PG_MODULE_MAGIC;
 
@@ -51,7 +51,7 @@ static void fkhunter_ProcessUtility(PlannedStmt *pstmt, const char *queryString,
                         char *fk_col = strVal(linitial(constraint->fk_attrs));
                         if (!column_has_index(fk_table, fk_col))
                         {
-                            elog(ERROR, "Foreign Key creation on unindexed column is not allowed.");
+                            elog(ERROR, "Foreign Key creation on an unindexed column is not allowed.");
                         }
                     }
                 }
@@ -67,7 +67,7 @@ static void fkhunter_ProcessUtility(PlannedStmt *pstmt, const char *queryString,
                     Constraint *constraint = (Constraint *) lfirst(cell);
                     if (constraint->contype == CONSTR_FOREIGN)
                     {
-                        elog(ERROR, "Foreign Key creation is not allowed.");
+                        elog(ERROR, "Foreign Key creation is not allowed, first create table without FK then create indexes on FK column and use alter statement to add FK.");
                     }
                 }
             }
@@ -96,7 +96,7 @@ static bool column_has_index(char *tabname, char *colname)
         "   WHERE t.relkind = 'r' AND t.relname = $1 AND a.attname = $2 AND ix.indpred IS NULL AND ix.indexprs IS NULL "
         ")";
     
-    Oid argtypes[2] = {TEXTOID, TEXTOID};  // Moved declarations here
+    Oid argtypes[2] = {TEXTOID, TEXTOID};  
     Datum args[2];
     int ret;
 
