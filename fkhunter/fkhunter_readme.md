@@ -1,4 +1,12 @@
+DEMO
 https://github.com/user-attachments/assets/e0c66961-7a1a-4675-83e8-341ec141dd5e
+
+
+Ideal use case would be in non-production environment to prevent developers from creating schema with unindexed foreign key. It's perfect to be installed on a CI/CD server via seperate script so extension itself does not go on production but prevents unindexed foreign key's from going freely on Prod.
+
+
+
+Installation Steps: 
 
 
 1) Install PostgreSQL and Development Tools, in case it's missing.
