@@ -1,0 +1,4 @@
+# concurrent_enforcer extension
+comment = 'Enforces the use of CONCURRENTLY in CREATE INDEX and REINDEX'
+default_version = '1.0'
+relocatable = false
