@@ -2,9 +2,8 @@
 #include "tcop/utility.h"
 #include "commands/event_trigger.h"
 #include "commands/defrem.h"
-#include "utils/elog.h"
 #include "parser/parse_node.h"
-#include "utils/lsyscache.h"
+#include "utils/elog.h"
 #include <ctype.h>
 #include <string.h>
 
@@ -27,6 +26,8 @@ static void enforce_concurrent_indexes(
     QueryCompletion *completion);
 
 static bool contains_concurrently(const char *queryString);
+static bool is_index_operation(PlannedStmt *pstmt);
+static bool is_table_creation_context(ProcessUtilityContext context);
 
 /* Module initialization */
 void _PG_init(void)
@@ -65,10 +66,40 @@ static bool contains_concurrently(const char *queryString)
     found = strstr(uppercaseQuery, needle) != NULL;
 
     pfree(uppercaseQuery);
+
     return found;
 }
 
-/* Main utility hook */
+/* Utility function to check if the statement is for index creation or reindexing */
+static bool is_index_operation(PlannedStmt *pstmt)
+{
+    if (pstmt->commandType == CMD_UTILITY)
+    {
+        Node *parsetree = pstmt->utilityStmt;
+
+        /* Check for CREATE INDEX statements */
+        if (IsA(parsetree, IndexStmt))
+        {
+            return true; /* Index creation */
+        }
+
+        /* Check for REINDEX statements */
+        if (IsA(parsetree, ReindexStmt))
+        {
+            return true; /* Reindexing */
+        }
+    }
+    return false;
+}
+
+/* Utility function to check if we are in the context of a CREATE TABLE statement */
+static bool is_table_creation_context(ProcessUtilityContext context)
+{
+    /* ProcessUtilityContext indicates whether we're inside a table creation process */
+    return context == PROCESS_UTILITY_SUBCOMMAND;
+}
+
+/* Enforce concurrent indexes */
 static void enforce_concurrent_indexes(
     PlannedStmt *pstmt,
     const char *queryString,
@@ -79,33 +110,29 @@ static void enforce_concurrent_indexes(
     DestReceiver *dest,
     QueryCompletion *completion)
 {
-    Node *parsetree = pstmt->utilityStmt;
-
-    /* Handle CREATE INDEX statements */
-    if (nodeTag(parsetree) == T_IndexStmt)
+    /* Skip enforcement if we're inside a table creation context */
+    if (is_table_creation_context(context))
     {
-        IndexStmt *stmt = (IndexStmt *)parsetree;
-
-        if (!stmt->concurrent)
-        {
-            ereport(ERROR,
-                    (errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-                     errmsg("Index creation must use the CONCURRENTLY keyword to ensure online index building.")));
-        }
+        if (prev_ProcessUtility)
+            prev_ProcessUtility(pstmt, queryString, readOnlyTree, context, params, queryEnv, dest, completion);
+        else
+            standard_ProcessUtility(pstmt, queryString, readOnlyTree, context, params, queryEnv, dest, completion);
+        return;
     }
-    /* Handle REINDEX statements */
-    else if (nodeTag(parsetree) == T_ReindexStmt)
+
+    /* Apply enforcement only for explicit index creation or reindexing */
+    if (is_index_operation(pstmt))
     {
-        /* REINDEX does not have a `concurrent` flag, so parse the query string */
+        /* Check for CONCURRENTLY in the query string */
         if (!contains_concurrently(queryString))
         {
             ereport(ERROR,
                     (errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-                     errmsg("REINDEX operations must use the CONCURRENTLY keyword for online index rebuilding.")));
+                     errmsg("All index creation and reindexing operations must use the CONCURRENTLY keyword")));
         }
     }
 
-    /* Call the previous hook or the standard process utility function */
+    /* Pass control to the next ProcessUtility hook */
     if (prev_ProcessUtility)
         prev_ProcessUtility(pstmt, queryString, readOnlyTree, context, params, queryEnv, dest, completion);
     else
