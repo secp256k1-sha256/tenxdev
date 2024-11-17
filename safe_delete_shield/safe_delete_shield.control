@@ -1,0 +1,4 @@
+# safe_delete_shield extension
+comment = 'Prevents accidental full-table deletions by enforcing a WHERE clause on DELETE commands.'
+default_version = '1.0'
+relocatable = false
