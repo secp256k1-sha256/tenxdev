@@ -15,7 +15,7 @@ Pre-requisite
 ```
 ***Install PostgreSQL and Development Tools, in case it's missing.
 sudo apt update
-sudo apt install -y postgresql-16 postgresql-server-dev-16 build-essential
+sudo apt install -y postgresql-17 postgresql-server-dev-17 build-essential
 ```
 
 Installation
@@ -23,11 +23,14 @@ Installation
 ***Download and Go to the Extension Directory
 mkdir concurrent_enforcer
 cd concurrent_enforcer
+
 ***Make and Install the Extension
 sudo make
 sudo make install
+
 ***Add to shared_preload_libraries
 alter system set shared_preload_libraries=concurrent_enforcer;
+
 ***Restart PostgreSQL service and create your new extension.
 sudo systemctl restart postgresql.service
 sudo -u postgres psql -c "CREATE EXTENSION concurrent_enforcer;"
