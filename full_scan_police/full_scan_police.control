@@ -1,0 +1,5 @@
+# full_scan_police.control
+comment = 'Track top sequential scans and generate offender reports'
+default_version = '1.0'
+relocatable = false
+schema = full_scan_police
