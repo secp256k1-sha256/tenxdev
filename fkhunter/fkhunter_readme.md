@@ -8,25 +8,26 @@ Ideal use case would be in non-production environment to prevent developers from
 
 
 
-Pre-requisites 
+Pre-requisite 
 ```
 ***Install PostgreSQL and Development Tools, in case it's missing.***
 sudo apt update
 sudo apt install -y postgresql-16 postgresql-server-dev-16 build-essential
 ```
 
+Installation
 ```
-1.Download and Go to the Extension Directory
+***Download and Go to the Extension Directory***
 mkdir fkhunter
 cd fkhunter
-2.Make and Install the Extension
+***Make and Install the Extension***
 sudo make
 sudo make install
-3.Add to shared_preload_libraries
+***Add to shared_preload_libraries***
 alter system set shared_preload_libraries=fkhunter;
-4.Restart PostgreSQL service and create your new extension.
+***Restart PostgreSQL service and create your new extension***
 sudo systemctl restart postgresql.service
 sudo -u postgres psql -c "CREATE EXTENSION fkhunter;"
-
+```
 
 
