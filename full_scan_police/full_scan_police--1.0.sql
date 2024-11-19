@@ -2,7 +2,7 @@
 
 DO $$
 BEGIN
-        EXECUTE 'CREATE SCHEMA IF NOT EXISTS full_scan_police';
+    EXECUTE 'CREATE SCHEMA IF NOT EXISTS full_scan_police';
 END;
 $$;
 
@@ -61,7 +61,7 @@ BEGIN
                 mean_exec_time AS mean_time, shared_blks_hit AS logical_io
             FROM pg_stat_statements
             WHERE query LIKE '%' || top_tables.table_name || '%'
-            ORDER BY total_exec_time DESC
+            ORDER BY mean_exec_time DESC
             LIMIT 1
         LOOP
             -- Use UPSERT to insert or update data
