@@ -10,7 +10,7 @@ Ideal use case would be in non-production environment to prevent developers from
 
 Pre-requisite 
 ```
-***Install PostgreSQL and Development Tools, in case it's missing.***
+***Install PostgreSQL and Development Tools, initdb, start Postgres and check pg_config is correct ***
 sudo apt update
 sudo apt install -y postgresql-17 postgresql-server-dev-17 build-essential
 ```
@@ -33,4 +33,8 @@ sudo systemctl restart postgresql.service
 sudo -u postgres psql -c "CREATE EXTENSION fkhunter;"
 ```
 
+***Works as expected on Rocky Linux 9.5 (Blue Onyx)***
 
+![success2_rockylinux_pg17](https://github.com/user-attachments/assets/72468643-329b-46b3-bbd6-bc0075c90ca1)
+
+![success3_rockylinux_pg17](https://github.com/user-attachments/assets/15219828-6c75-475a-9db4-901c5ac498a1)
