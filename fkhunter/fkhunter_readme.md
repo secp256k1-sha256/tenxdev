@@ -17,8 +17,7 @@ sudo apt install -y postgresql-17 postgresql-server-dev-17 build-essential
 
 Installation
 ```
-***Download and Go to the Extension Directory***
-mkdir fkhunter
+***Git clone code and Go to the Extension Directory***
 cd fkhunter
 
 ***Make and Install the Extension***
