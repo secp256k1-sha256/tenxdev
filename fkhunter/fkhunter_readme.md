@@ -37,3 +37,5 @@ sudo -u postgres psql -c "CREATE EXTENSION fkhunter;"
 ![success2_rockylinux_pg17](https://github.com/user-attachments/assets/72468643-329b-46b3-bbd6-bc0075c90ca1)
 
 ![success3_rockylinux_pg17](https://github.com/user-attachments/assets/15219828-6c75-475a-9db4-901c5ac498a1)
+
+![success4_rockylinux_pg17](https://github.com/user-attachments/assets/f2157111-f4d4-4ecd-8351-729e637e39e1)
