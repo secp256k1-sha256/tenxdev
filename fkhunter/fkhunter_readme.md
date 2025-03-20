@@ -1,4 +1,4 @@
-DEMO
+DEMO (On Ubuntu)
 
 https://github.com/user-attachments/assets/e0c66961-7a1a-4675-83e8-341ec141dd5e
 
